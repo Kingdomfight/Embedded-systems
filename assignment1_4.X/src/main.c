@@ -15,6 +15,13 @@
 
 /* Your own libraries */
 #include "config.h"
+#include "timer.h"
+#include "led.h"
+#include "btn.h"
+#include "basysmx3Debounce.h"
+#include "utils.h"
+#include "assignment1_4.h"
+#include <proc/p32mx370f512l.h>
 
 /* Device Config Bits in DEVCFG1:  */
 #pragma config FNOSC =      FRC
@@ -31,10 +38,14 @@
 #pragma config JTAGEN =     OFF     
 #pragma config FWDTEN =     OFF  
 
-
 int main() {
     //all intialization functions
-    
+    LED_Init();
+    Timer1_Init();
+    Timer2_Init();
+    macro_enable_interrupts();
+    IEC0SET = 1 << 4;
+    IEC0SET = 1 << 9;
     while(1) {
         //infinite loop
     }
