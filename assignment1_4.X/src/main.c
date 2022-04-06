@@ -14,14 +14,10 @@
 #include <sys/attribs.h>
 
 /* Your own libraries */
-#include "config.h"
-#include "timer.h"
 #include "led.h"
+#include "lcd.h"
 #include "btn.h"
-#include "basysmx3Debounce.h"
-#include "utils.h"
 #include "assignment1_4.h"
-#include <proc/p32mx370f512l.h>
 
 /* Device Config Bits in DEVCFG1:  */
 #pragma config FNOSC =      FRC
@@ -41,13 +37,15 @@
 int main() {
     //all intialization functions
     LED_Init();
+    LCD_Init();
+    BTN_Init();
     Timer1_Init();
-    Timer2_Init();
-    macro_enable_interrupts();
-    IEC0SET = 1 << 4;
-    IEC0SET = 1 << 9;
+    
+    state CurrentState = S0;    //Initial state
+    
     while(1) {
-        //infinite loop
+        StateOutput(CurrentState);
+        CurrentState = SequenceDetector(CurrentState);
     }
     return (0);
 }
