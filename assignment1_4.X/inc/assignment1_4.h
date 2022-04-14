@@ -48,6 +48,7 @@ void Timer1_Init();
 */
 void Timer1_SetPeriod(bool PeriodSelect);
 
+void shift(char *Sequence, char input);
 
 state SequenceDetector(state CurrentState);
 

@@ -81,21 +81,32 @@ void __ISR(_TIMER_1_VECTOR, ipl7auto) Timer1ISR(void) {
     IFS0CLR = 1 << 4; //Clear interrupt flag
 }
 
+void shift(char *Sequence, char input) {
+    Sequence[2] = Sequence[1];
+    Sequence[1] = Sequence[0];
+    Sequence[0] = input;
+}
+
 state SequenceDetector(state CurrentState) {
     static char Sequence[3] = {'-','-','-'};
     T_Sequence CompleteSequence;
     int btnrDebounce = basysmx3Debounce_debounceButton(BTNR_IDX);
     int btndDebounce = basysmx3Debounce_debounceButton(BTND_IDX);
+    int btncDebounce = basysmx3Debounce_debounceButton(BTNC_IDX);
+    int btnlDebounce = basysmx3Debounce_debounceButton(BTNL_IDX);
+    int btnuDebounce = basysmx3Debounce_debounceButton(BTNU_IDX);
+    
     if (btnrDebounce == RISING) {
-        Sequence[2] = Sequence[1];
-        Sequence[1] = Sequence[0];
-        Sequence[0] = 'R';
+        shift(Sequence, 'R');
     }
     else if (btndDebounce == RISING) {
-        Sequence[2] = Sequence[1];
-        Sequence[1] = Sequence[0];
-        Sequence[0] = 'D';
+        shift(Sequence, 'D');
     }
+    else if (btncDebounce == RISING || btnlDebounce == RISING 
+            || btnuDebounce == RISING) {
+        shift(Sequence, '-');
+    }
+
     if (Sequence[0] == 'R' && Sequence[1] == 'R' && Sequence[2] == 'R') {
         CompleteSequence = RRR;
     }
