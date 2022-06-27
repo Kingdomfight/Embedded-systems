@@ -18,7 +18,7 @@ void gpioInterrupt_initCNRG9(void (*callbackFunction)()) {
     LED_Init();
     
     //PMOD Pin JA10 is connected to bit 9 of port G (RG9)
-    TRISGbits.TRISG3 = 1;
+    TRISGbits.TRISG9 = 1;
     ANSELGbits.ANSG9 = 0;
     
     CNPUGbits.CNPUG9 = 0;
