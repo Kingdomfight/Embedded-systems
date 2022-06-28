@@ -14,9 +14,6 @@
 #include <sys/attribs.h>
 
 /* Your own libraries */
-#include "timer.h"
-#include "gpioInterrupt.h"
-
 #include "aic.h"
 #include "config.h"
 #include "lcd.h"
@@ -38,70 +35,48 @@
 #pragma config JTAGEN =     OFF     
 #pragma config FWDTEN =     OFF  
 
-//const float Kp = 200;
-//const float Ki = 100;
-//const float Kd = 0;
-//
-//int32_t pid_controller(float kp, float ki, float kd, float error);
+#define Kp 1
+#define Ki 2
+#define Kd 0.1
+#define Bits_To_Int 200/1023
 
 int main() {    
-    __builtin_disable_interrupts();
-    //put initialisation functions which are sensitive for interrupts here
-    macro_enable_interrupts();
-    //put other initialisation functions here
+    uint16_t POT_Value;
+    uint8_t Set_Speed;
+    uint8_t rpm;
+    int16_t error;
+    int32_t PID_Error;
+    char LCD_String[2][40];
     
     AIC_Init();
     LCD_Init();
     MOT_Init(1);
-    gpioInterrupt_initCNRG9(readEncoder);
-    timer1_Init(Timer1_PR * PB_FRQ / 256);
-    
-    uint16_t POT_Value;
-    uint8_t Set_Speed;
-    uint16_t rpm = 0;
-    char LCD_String[2][40];
-//    float error;
-//    int32_t PID_Error;
-//    uint8_t motorCmd;
+    speed_Sensor_Init();
+    macro_enable_interrupts();
     
     while(1) {
-        //put your infinite loop here
+        //Set speed
         POT_Value = AIC_Val();
         Set_Speed = POT_Value * Bits_To_Int;
-        MOT_SetPhEnMotor1(0, Set_Speed);
         
-        if (localCount >= 10) {
-            rpm = getSpeed();
+        //Measured speed
+        rpm = get_Speed();
+        
+        //Correction signal
+        error = Set_Speed - rpm;
+        PID_Error = pid_controller(Kp, Ki, Kd, error);
+        if (PID_Error > 255) {
+            PID_Error = 255;
+        } else if (PID_Error < 0) {
+            PID_Error = 0;
         }
-        else if(timer1_interrupted()) {
-            rpm = 0;
-            localCount = 0;
-        }
-//        error = Set_Speed - rpm;
-//        PID_Error = pid_controller(Kp, Ki, Kd, error);
-//        if (PID_Error > 255) {
-//            PID_Error = 255;
-//        } else if (PID_Error < 0) {
-//            PID_Error = 0;
-//        }
-//        sprintf(LCD_String[0], "Set %u CMD %u      ", Set_Speed, motorCmd);
-        sprintf(LCD_String[0], "Set %u   ", Set_Speed);
+        //Output signal
+        MOT_SetPhEnMotor1(0, PID_Error);
+        
+        sprintf(LCD_String[0], "Set %u CMD %d  ", Set_Speed, PID_Error);
         sprintf(LCD_String[1], "Speed %u   ", rpm);
         LCD_WriteStringAtPos(LCD_String[0], 0, 0);
-        LCD_WriteStringAtPos(LCD_String[1], 1, 0);        
+        LCD_WriteStringAtPos(LCD_String[1], 1, 0);
     }
     return (0);
 }
-
-//int32_t pid_controller(float kp, float ki, float kd, float error) {
-////    int32_t output;
-////    const float dt = 0.1;
-////    static float prevError = 0;
-////    static float intError = 0;
-////    //put pid controller code here
-////    float diffError = error - prevError;
-////    intError = intError + error;
-////    output = (int32_t)(error*kp + intError*ki*dt + diffError*kd/dt);
-////    prevError = error;
-////    return output;
-//}

@@ -11,19 +11,17 @@
 #include <xc.h>
 #include "config.h"
 
-#define RPM_DIVIDER 30*PB_FRQ/256
-#define Bits_To_Int 200/1023
-#define Timer1_PR 1
-
 #ifdef	__cplusplus
 extern "C" {
 #endif
-
-    uint8_t getSpeed();
-    void readEncoder(int edge);
+    //public functions
+    void speed_Sensor_Init();
+    uint8_t get_Speed();
+    int32_t pid_controller(float kp, float ki, float kd, int16_t error);
     
-    extern volatile uint8_t localCount;
-
+    //private functions
+    static uint8_t calc_Speed();
+    static void readEncoder(int edge);
 
 #ifdef	__cplusplus
 }
