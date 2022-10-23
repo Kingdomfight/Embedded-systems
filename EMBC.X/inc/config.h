@@ -10,6 +10,9 @@
 
 #define PB_FRQ  40000000
 
+#define true 1
+#define false 0
+
 #define macro_enable_interrupts() \
 {  unsigned int val = 0;\
     asm volatile("mfc0 %0,$13":"=r"(val));  \

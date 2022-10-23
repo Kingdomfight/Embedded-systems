@@ -7,7 +7,7 @@
 
 #define ERROR -1
 
-int clk;
+static int clk;
 
 int oc_init(int freq, int channel, int timerChannel, int period, int interruptEnabled, int interruptPriority) {
     clk = freq;

@@ -7,8 +7,8 @@
 
 #define ERROR -1
 
-int clk;
-int prd1, prd2, prd3, prd4, prd5;
+static int clk;
+static int prd1, prd2, prd3, prd4, prd5;
 
 int timer_init(int freq, int channel, int periodMs, int interruptEnabled, int interruptPriority) {    
     clk = freq;

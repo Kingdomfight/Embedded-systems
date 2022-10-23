@@ -7,9 +7,9 @@
 #include "timer.h"
 #include "oc.h"
 
-int frq, periodUs;
-int timer2Pr;
-int timer3Pr;
+static int frq, periodUs;
+static int timer2Pr;
+static int timer3Pr;
 
 void pwm_init(int freq, int timerChannel, int ocChannel, int period) {
     timer_init(freq, timerChannel, period, 1, 7);

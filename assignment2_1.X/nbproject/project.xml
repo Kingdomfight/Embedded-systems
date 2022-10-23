@@ -4,7 +4,7 @@
     <configuration>
         <data xmlns="http://www.netbeans.org/ns/make-project/1">
             <name>assignment2_1</name>
-            <creation-uuid>62a1ff75-1d45-4b8d-8ef9-13d8aec6c5ba</creation-uuid>
+            <creation-uuid>c9dd7c47-e4cf-4b09-a126-84775d0595c5</creation-uuid>
             <make-project-type>0</make-project-type>
             <c-extensions>c</c-extensions>
             <cpp-extensions/>
@@ -13,9 +13,7 @@
             <sourceEncoding>ISO-8859-1</sourceEncoding>
             <make-dep-projects/>
             <sourceRootList>
-                <sourceRootElem>inc/assignment1_5</sourceRootElem>
-                <sourceRootElem>inc/Basys-MX3-library</sourceRootElem>
-                <sourceRootElem>inc/Fontys-lib</sourceRootElem>
+                <sourceRootElem>inc</sourceRootElem>
                 <sourceRootElem>src</sourceRootElem>
             </sourceRootList>
             <confList>
