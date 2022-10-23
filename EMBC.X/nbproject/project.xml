@@ -3,8 +3,8 @@
     <type>com.microchip.mplab.nbide.embedded.makeproject</type>
     <configuration>
         <data xmlns="http://www.netbeans.org/ns/make-project/1">
-            <name>assignment1_3</name>
-            <creation-uuid>b718e71b-f950-4fd3-b1d3-a010cde3bd48</creation-uuid>
+            <name>EMBC</name>
+            <creation-uuid>665d4927-9b0f-4a6e-9626-fb90d11c747c</creation-uuid>
             <make-project-type>0</make-project-type>
             <c-extensions>c</c-extensions>
             <cpp-extensions/>
@@ -13,7 +13,8 @@
             <sourceEncoding>ISO-8859-1</sourceEncoding>
             <make-dep-projects/>
             <sourceRootList>
-                <sourceRootElem>.</sourceRootElem>
+                <sourceRootElem>inc</sourceRootElem>
+                <sourceRootElem>src</sourceRootElem>
             </sourceRootList>
             <confList>
                 <confElem>
