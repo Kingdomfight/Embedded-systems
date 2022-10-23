@@ -8,6 +8,10 @@
 #define ERROR -1
 
 static int clk;
+static OCcallback OC1callbackfp;
+static uint8_t OC1callbackflag = 0;
+static OCcallback OC2callbackfp;
+static uint8_t OC2callbackflag = 0;
 
 int oc_init(int freq, int channel, int timerChannel, int period, int interruptEnabled, int interruptPriority) {
     clk = freq;
@@ -19,6 +23,30 @@ int oc_init(int freq, int channel, int timerChannel, int period, int interruptEn
     }
     
     return 1;
+}
+
+void OC1_register_callback( OCcallback ptr_OCcallback ) {
+    OC1callbackfp = ptr_OCcallback;
+    OC1callbackflag = 1;
+}
+
+void OC2_register_callback( OCcallback ptr_OCcallback ) {
+    OC2callbackfp = ptr_OCcallback;
+    OC2callbackflag = 1;
+}
+
+void __ISR(_OUTPUT_COMPARE_1_VECTOR, ipl7auto) Oc1ISR( void ) {
+    if(OC1callbackflag) {
+        OC1callbackfp();
+    }
+    IFS0bits.OC1IF = 0;
+}
+
+void __ISR(_OUTPUT_COMPARE_2_VECTOR, ipl7auto) Oc2ISR( void ) {
+    if(OC2callbackflag) {
+        OC2callbackfp();
+    }
+    IFS0bits.OC2IF = 0;
 }
 
 void oc_attachInterrupt(int channel, int priority) {

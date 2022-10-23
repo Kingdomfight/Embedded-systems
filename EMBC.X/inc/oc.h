@@ -9,9 +9,15 @@
  * Allows initializing an OC and an interrupt for that OC (optional).
  */
 
+typedef void (*OCcallback)( void );
+
 /**
  * External functions
  */
+
+void OC1_register_callback(OCcallback ptr_OCcallback);
+
+void OC2_register_callback(OCcallback ptr_OCcallback);
 
 /**
  * Initialize an OC for a specific timer

@@ -3,6 +3,8 @@
 #include "config.h"
 #include "servo.h"
 #include "pwm.h"
+#include "timer.h"
+#include "oc.h"
 
 #define PWM_TIMER 2
 #define PWM_PERIOD 50
@@ -12,6 +14,9 @@
 
 static uint8_t SetupPin( uint8_t channel );
 static uint16_t AngleToUs( int8_t angle );
+static void servo_T2callback( void );
+static void servo_OC1callback( void );
+static void servo_OC2callback( void );
 
 static uint8_t Active_Channels = 0;
 
@@ -19,6 +24,7 @@ uint8_t servo_init( int fpb, uint8_t channel, int8_t angle ) {
     if(!SetupPin(channel)) {
         return 0;
     }
+    timer_register_T2callback(servo_T2callback);
     pwm_init(fpb, PWM_TIMER, channel, PWM_PERIOD);
     uint16_t PWM_Time = AngleToUs(angle);
     pwm_setWidth(PWM_TIMER, channel, PWM_Time);
@@ -28,26 +34,6 @@ uint8_t servo_init( int fpb, uint8_t channel, int8_t angle ) {
 void servo_setpos( uint8_t channel, int8_t angle ) {
     uint16_t PWM_Time = AngleToUs(angle);
     pwm_setWidth(PWM_TIMER, channel, PWM_Time);
-}
-
-void __ISR(_TIMER_2_VECTOR, ipl7auto) Timer2ISR( void ) {
-    if(Active_Channels & CHANNEL_1_MASK) {
-        lat_SRV_S0PWM = 1;
-    }
-    if(Active_Channels & CHANNEL_2_MASK) {
-        lat_SRV_S1PWM = 1;
-    }
-    IFS0bits.T2IF = 0;
-}
-
-void __ISR(_OUTPUT_COMPARE_1_VECTOR, ipl7auto) Oc1ISR( void ) {
-    lat_SRV_S0PWM = 0;
-    IFS0bits.OC1IF = 0;
-}
-
-void __ISR(_OUTPUT_COMPARE_2_VECTOR, ipl7auto) Oc2ISR( void ) {
-    lat_SRV_S1PWM = 0;
-    IFS0bits.OC2IF = 0;
 }
 
 static uint8_t SetupPin( uint8_t channel ) {
@@ -72,4 +58,21 @@ static uint16_t AngleToUs( int8_t angle ) {
     angle = (angle > 45) ? 45 : ((angle < -45) ? -45 : angle);
     uint16_t Time = (600/45)*angle + 1500;
     return Time;
+}
+
+static void servo_T2callback( void ) {
+    if(Active_Channels & CHANNEL_1_MASK) {
+        lat_SRV_S0PWM = 1;
+    }
+    if(Active_Channels & CHANNEL_2_MASK) {
+        lat_SRV_S1PWM = 1;
+    }
+}
+
+static void servo_OC1callback( void ) {
+    lat_SRV_S0PWM = 0;
+}
+
+static void servo_OC2callback( void ) {
+    lat_SRV_S1PWM = 0;
 }

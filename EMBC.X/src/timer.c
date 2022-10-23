@@ -9,6 +9,8 @@
 
 static int clk;
 static int prd1, prd2, prd3, prd4, prd5;
+static T2callback T2callbackfp;
+static uint8_t T2callbackflag = 0;
 
 int timer_init(int freq, int channel, int periodMs, int interruptEnabled, int interruptPriority) {    
     clk = freq;
@@ -37,6 +39,18 @@ int timer_initRaw(int freq, int channel, int period, int prescaler, int interrup
     }
     
     return prescaler != ERROR && prescaler != ERROR;
+}
+
+void timer_register_T2callback( T2callback ptr_T2callback ) {
+    T2callbackfp = ptr_T2callback;
+    T2callbackflag = 1;
+}
+
+void __ISR(_TIMER_2_VECTOR, ipl7auto) Timer2ISR( void ) {
+    if(T2callbackflag) {
+        T2callbackfp();
+    }
+    IFS0bits.T2IF = 0;
 }
 
 void timer_attachInterrupt(int channel, int priority) {

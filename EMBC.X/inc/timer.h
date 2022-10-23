@@ -9,9 +9,13 @@
  * Allows initializing a timer and an interrupt for that timer (optional).
  */
 
+typedef void (*T2callback)( void );
+
 /**
  * External functions
  */
+
+void timer_register_T2callback( T2callback ptr_T2callback );
 
 /**
  * Initialize a timer providing period in ms
