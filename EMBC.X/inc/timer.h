@@ -9,9 +9,13 @@
  * Allows initializing a timer and an interrupt for that timer (optional).
  */
 
+typedef void (*T2callback)( void );
+
 /**
  * External functions
  */
+
+void timer_register_T2callback( T2callback ptr_T2callback );
 
 /**
  * Initialize a timer providing period in ms
@@ -81,14 +85,20 @@ void timer_attachInterrupt(int channel, int priority);
 void timer_detachInterrupt(int channel);
 
 /**
+ * Enable a timer
+ * 
+ * @param channel - integer
+ *        Timer selection (1-5).
+ */
+void timer_start(int channel);
+
+/**
  * Disable a timer
  * 
  * @param channel - integer
  *        Timer selection (1-5).
- * 
- * @return success
  */
-int timer_stop(int channel);
+void timer_stop(int channel);
 
 /**
  * Reset timer counter
