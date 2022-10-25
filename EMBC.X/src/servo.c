@@ -24,7 +24,15 @@ uint8_t servo_init( int fpb, uint8_t channel, int8_t angle ) {
     if(!SetupPin(channel)) {
         return 0;
     }
+    
     timer_register_T2callback(servo_T2callback);
+    if(channel == 1) {
+        OC1_register_callback(servo_OC1callback);
+    }
+    else if(channel == 2) {
+        OC2_register_callback(servo_OC2callback);
+    }
+    
     pwm_init(fpb, PWM_TIMER, channel, PWM_PERIOD);
     uint16_t PWM_Time = AngleToUs(angle);
     pwm_setWidth(PWM_TIMER, channel, PWM_Time);

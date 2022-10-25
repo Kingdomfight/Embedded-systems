@@ -85,14 +85,20 @@ void timer_attachInterrupt(int channel, int priority);
 void timer_detachInterrupt(int channel);
 
 /**
+ * Enable a timer
+ * 
+ * @param channel - integer
+ *        Timer selection (1-5).
+ */
+void timer_start(int channel);
+
+/**
  * Disable a timer
  * 
  * @param channel - integer
  *        Timer selection (1-5).
- * 
- * @return success
  */
-int timer_stop(int channel);
+void timer_stop(int channel);
 
 /**
  * Reset timer counter

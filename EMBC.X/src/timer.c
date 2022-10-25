@@ -122,7 +122,34 @@ void timer_detachInterrupt(int channel) {
     }
 }
 
-int timer_stop(int channel) {
+void timer_start(int channel) {
+    switch(channel) {
+        case 1:
+            T1CONbits.ON = 1;
+            break;
+            
+        case 2:
+            T2CONbits.ON = 1;
+            break;
+            
+        case 3:
+            T3CONbits.ON = 1;
+            break;
+            
+        case 4:
+            T4CONbits.ON = 1;
+            break;
+            
+        case 5:
+            T5CONbits.ON = 1;
+            break;
+            
+        default:
+            break;
+    }
+}
+
+void timer_stop(int channel) {
     switch(channel) {
         case 1:
             T1CONbits.ON = 0;
@@ -147,8 +174,6 @@ int timer_stop(int channel) {
         default:
             break;
     }
-    
-    return channel > 0 && channel < 6;
 }
 
 void timer_reset(int channel) {
